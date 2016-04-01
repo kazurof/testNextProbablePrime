@@ -49,11 +49,42 @@ public class Main {
 //    Stream.iterate(bi, i -> i.nextProbablePrime()).limit(100).forEach(System.out::println);
   }
 
-  static void downloadPrimeZip(int index) {
-
+  /*
+  * https://primes.utm.edu/lists/small/millions/primes1.zip
+  * http://www.utm.edu/~caldwell/primes/millions/primes1.zip
+  * */
+  static void downloadPrimeZip(int index) throws MalformedURLException, IOException {
+    Path dest = Paths.get(String.format("primes%d.zip", index));
+    if (dest.toFile().exists()) {
+      System.out.println(dest + " is already exists.");
+      return;
+    }
+    System.out.println(dest + " not found. try to download");
+    URL url = new URL(String.format("http://www.utm.edu/~caldwell/primes/millions/primes%d.zip", index));
+    try (InputStream is = url.openStream()) {
+      Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
+    }
+    System.out.println("download finished");
   }
 
-  static void extractPrimeFile(int index) {
+  static void extractPrimeFile(int index) throws IOException {
+    Path dest = Paths.get(String.format("primes%d.txt", index));
+    if (dest.toFile().exists()) {
+      System.out.println(dest + " is already exists.");
+      return;
+    }
+    System.out.println(dest + " not found. try to extract");
+
+    Path zipPath = Paths.get(String.format("primes%d.zip", index));
+
+    try (FileSystem fs = FileSystems.newFileSystem(zipPath, ClassLoader.getSystemClassLoader())) {
+      Path path = fs.getPath(String.format("/primes%d.txt", index));
+      try (InputStream is = Files.newInputStream(path)) {
+        Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
+      }
+    }
+    System.out.println("extract finished");
+
   }
 
 }
