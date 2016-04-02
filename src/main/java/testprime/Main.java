@@ -2,58 +2,74 @@ package testprime;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class Main {
   static final String WORK_DIR = "work";
 
-  public static void main(String[] args) {
-
-    String start = "15485867";
-    int index = 2;
-
-    final Path path = Paths.get(String.format("primes%d/primes%d.txt", index, index));
+  public static void main(String[] args) throws IOException {
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
-    wrapper.value = new BigInteger(start);
-    System.out.println("aaa");
-    try (BufferedReader csv = Files.newBufferedReader(path)) { // UTF-8
+    wrapper.value = new BigInteger("2");
+
+    Stream.iterate(1, i -> i + 1).limit(1).forEach(i -> {
+        try {
+          wrapper.value = doTest(i, wrapper.value);
+        } catch (IOException e) {
+          e.printStackTrace();
+          System.exit(0);
+        }
+      }
+    );
+  }
+
+
+  static BigInteger doTest(int index, BigInteger initialNumber) throws IOException {
+    downloadPrimeZip(index);
+    extractPrimeFile(index);
+
+    final Path path = Paths.get(String.format("primes%d.txt", index));
+    BigIntegerWrapper wrapper = new BigIntegerWrapper();
+    wrapper.value = initialNumber;
+    System.out.printf("start for %d%n", index);
+    try (BufferedReader csv = Files.newBufferedReader(path)) {
       csv.readLine();
-      csv.lines().flatMap(s -> Arrays.stream(s.split("\\s++"))).map(s -> s.trim()).filter(s -> !s.isEmpty())
-        .forEach(s -> {
-            BigInteger target = new BigInteger(s);
-
-            System.out.println(s);
-            if (!target.equals(wrapper.value)) {
-              System.out.printf("BigInteger prime %s and true prime %s is not same", wrapper.value, target);
-              System.exit(0);
-            }
-            wrapper.value = wrapper.value.nextProbablePrime();
+      csv.lines()
+        .flatMap(s -> Arrays.stream(s.split("\\s++")))
+        .map(s -> s.trim())
+        .filter(s -> !s.isEmpty())
+        .map(BigInteger::new)
+        .peek(bi -> {
+          if (bi.divide(BigInteger.TEN).toString().endsWith("1234")) {
+            System.out.println(bi);
           }
-        );
-
-    } catch (IOException e) {
-      e.printStackTrace();
+        }).forEach(bi -> {
+          if (!bi.equals(wrapper.value)) {
+            System.out.printf("BigInteger prime %s and true prime %s is not same%n", wrapper.value, bi);
+            System.exit(0);
+          }
+          wrapper.value = wrapper.value.nextProbablePrime();
+        }
+      );
     }
-    System.out.println("bbb");
-
-//    Stream.iterate(1, i -> i + 1).limit(100).forEach(i -> {
-//        downloadPrimeZip(i);
-//        extractPrimeFile(i);
-//      }
-//    );
-//    BigInteger bi = BigInteger.ONE.add(BigInteger.ONE);
-//    Stream.iterate(bi, i -> i.nextProbablePrime()).limit(100).forEach(System.out::println);
+    System.out.printf("end for %d%n", index);
+    return wrapper.value;
   }
 
   /*
   * https://primes.utm.edu/lists/small/millions/primes1.zip
   * http://www.utm.edu/~caldwell/primes/millions/primes1.zip
   * */
-  static void downloadPrimeZip(int index) throws MalformedURLException, IOException {
+  static void downloadPrimeZip(int index) throws IOException {
     Path dest = Paths.get(String.format("primes%d.zip", index));
     if (dest.toFile().exists()) {
       System.out.println(dest + " is already exists.");
