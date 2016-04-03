@@ -24,3 +24,9 @@ dependencies {
 }
 
 
+task doTest(type: JavaExec) {
+  description 'evaluate BigInteger#nextProbablePrime() with the data at http://www.utm.edu/~caldwell/primes/millions/primes1.zip to primes50.zip '
+  main = "testprime.Main"
+  classpath = sourceSets.main.runtimeClasspath
+}
+

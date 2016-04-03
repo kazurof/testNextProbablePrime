@@ -28,7 +28,7 @@ public class Main {
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
     wrapper.value = new BigInteger("2");
 
-    Stream.iterate(1, i -> i + 1).limit(50).forEach(i -> {
+    Stream.iterate(1, i -> i + 1).limit(2).forEach(i -> {
         try {
           ThreadContext.push("index " + i);
           wrapper.value = doTest(i, wrapper.value);
@@ -58,7 +58,7 @@ public class Main {
         .filter(s -> !s.isEmpty())
         .map(BigInteger::new)
         .peek(bi -> {
-          if (bi.divide(BigInteger.TEN).toString().endsWith("1234")) {
+          if (bi.divide(BigInteger.TEN).toString().endsWith("12345")) {
             LOGGER.info(bi);
           }
         }).forEach(bi -> {
@@ -75,7 +75,6 @@ public class Main {
   }
 
   /*
-  * https://primes.utm.edu/lists/small/millions/primes1.zip
   * http://www.utm.edu/~caldwell/primes/millions/primes1.zip
   * */
   static void downloadPrimeZip(int index) throws IOException {
@@ -118,3 +117,5 @@ class BigIntegerWrapper {
   BigInteger value;
 
 }
+
+
