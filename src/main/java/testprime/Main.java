@@ -28,7 +28,7 @@ public class Main {
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
     wrapper.value = new BigInteger("2");
 
-    Stream.iterate(1, i -> i + 1).limit(1).forEach(i -> {
+    Stream.iterate(1, i -> i + 1).limit(50).forEach(i -> {
         try {
           ThreadContext.push("index " + i);
           wrapper.value = doTest(i, wrapper.value);
