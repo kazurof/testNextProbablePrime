@@ -50,12 +50,11 @@ public class Main {
     final Path path = Paths.get(String.format("primes%d.txt", index));
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
     wrapper.value = initialNumber;
-    try (BufferedReader csv = Files.newBufferedReader(path)) {
-      csv.readLine();
-      csv.lines()
     LOGGER.info(String.format("start for %d", index));
+    try (BufferedReader primes = Files.newBufferedReader(path)) {
+      primes.readLine();
+      primes.lines()
         .flatMap(s -> Arrays.stream(s.split("\\s++")))
-        .map(s -> s.trim())
         .filter(s -> !s.isEmpty())
         .map(BigInteger::new)
         .peek(bi -> {
@@ -82,7 +81,7 @@ public class Main {
   static void downloadPrimeZip(int index) throws IOException {
     Path dest = Paths.get(String.format("primes%d.zip", index));
     if (dest.toFile().exists()) {
-      System.out.println(dest + " is already exists.");
+      LOGGER.info(dest + " is already exists.");
       return;
     }
     LOGGER.info(dest + " not found. try to download");
