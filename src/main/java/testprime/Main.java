@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class Main {
-  static final String WORK_DIR = "work";
+  static final String PRIME_FILES = "primeFiles";
   private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
 
@@ -47,7 +47,7 @@ public class Main {
     downloadPrimeZip(index);
     extractPrimeFile(index);
 
-    final Path path = Paths.get(String.format("primes%d.txt", index));
+    final Path path = Paths.get(String.format("%s/primes%d.txt", PRIME_FILES, index));
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
     wrapper.value = initialNumber;
     LOGGER.info(String.format("start for %d", index));
@@ -79,7 +79,7 @@ public class Main {
   * http://www.utm.edu/~caldwell/primes/millions/primes1.zip
   * */
   static void downloadPrimeZip(int index) throws IOException {
-    Path dest = Paths.get(String.format("primes%d.zip", index));
+    Path dest = Paths.get(String.format("%s/primes%d.zip", PRIME_FILES, index));
     if (dest.toFile().exists()) {
       LOGGER.info(dest + " is already exists.");
       return;
@@ -93,17 +93,17 @@ public class Main {
   }
 
   static void extractPrimeFile(int index) throws IOException {
-    Path dest = Paths.get(String.format("primes%d.txt", index));
+    Path dest = Paths.get(String.format("%s/primes%d.txt", PRIME_FILES, index));
     if (dest.toFile().exists()) {
       LOGGER.info(dest + " is already exists.");
       return;
     }
     LOGGER.info(dest + " not found. try to extract");
 
-    Path zipPath = Paths.get(String.format("primes%d.zip", index));
+    Path zipPath = Paths.get(String.format("%s/primes%d.zip", PRIME_FILES, index));
 
     try (FileSystem fs = FileSystems.newFileSystem(zipPath, ClassLoader.getSystemClassLoader())) {
-      Path path = fs.getPath(String.format("/primes%d.txt", index));
+      Path path = fs.getPath(String.format("primes%d.txt", index));
       try (InputStream is = Files.newInputStream(path)) {
         Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
       }
