@@ -30,3 +30,8 @@ task doTest(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
 }
 
+task doTestOneFile(type: JavaExec) {
+  description 'evaluate with values in primelist.txt'
+  main = "testprime.TestOneFile"
+  classpath = sourceSets.main.runtimeClasspath
+}

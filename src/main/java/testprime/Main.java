@@ -115,6 +115,7 @@ public class Main {
 
 class BigIntegerWrapper {
   BigInteger value;
+  BigInteger count;
 
 }
 

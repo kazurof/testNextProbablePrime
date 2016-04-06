@@ -4,11 +4,15 @@
     <Console name="console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d %-5p [%t] - %x %m (%C.java:%L)%n"/>
     </Console>
+    <File name="fileAppender" fileName="logger.log">
+      <PatternLayout pattern="%d %-5p [%t] - %m (%C.java:%L)%n" charset="UTF-8" />
+    </File>
   </appenders>
 
   <loggers>
     <Logger name="testprime" level="debug" additivity="false">
       <appender-ref level="info" ref="console"/>
+      <appender-ref level="info" ref="fileAppender" />
     </Logger>
     <root level="trace">
       <appender-ref ref="console"/>
