@@ -14,6 +14,8 @@ public class TestOneFile {
   private static final Logger LOGGER = LogManager.getLogger(TestOneFile.class);
 
   public static void main(String[] args) throws IOException {
+    LOGGER.info("Please save prime number as you like to primelist.txt");
+    LOGGER.info("This will take around 17 hour and more if you put primes up to 10000000000. Be careful.");
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
     wrapper.value = new BigInteger("2");
     wrapper.count = BigInteger.ONE;

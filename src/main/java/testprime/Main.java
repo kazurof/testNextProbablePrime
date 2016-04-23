@@ -25,6 +25,7 @@ public class Main {
 
 
   public static void main(String[] args) throws IOException {
+    LOGGER.info("this will take around 1 hour and more. be careful.");
     BigIntegerWrapper wrapper = new BigIntegerWrapper();
     wrapper.value = new BigInteger("2");
 

@@ -31,7 +31,7 @@ task doTest(type: JavaExec) {
 }
 
 task doTestOneFile(type: JavaExec) {
-  description 'evaluate with values in primelist.txt'
+  description 'evaluate with values in primelist.txt. Please prepare true prime values and save them to primelist.txt before executing this'
   main = "testprime.TestOneFile"
   classpath = sourceSets.main.runtimeClasspath
 }
